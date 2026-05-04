@@ -21,3 +21,6 @@ v2.0 (Planned 05/01/2026)
 The project scope has been expanded to include a CRUD database with API endpoints. As this was a pivot from the original project, a new capstone document will be drafted to reflect changes alongside it being it's own project with the original serving as a template. 
 
 Additionally, AWS is in consideration for future implementation.
+
+Tech Stack (To Be Added)
+Node.js
