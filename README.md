@@ -24,3 +24,35 @@ Additionally, AWS is in consideration for future implementation.
 
 Tech Stack (To Be Added)
 Node.js
+
+# bug-hunt-v2
+
+Bug Hunt v2.0 is a planned update to include a CRUD database with API endpoints and is currently in progress 04/29/2026.
+
+## Project Structure
+
+### Backend
+
+### Frontend
+
+### Database
+
+### AI Integration
+
+
+### Caching
+
+## Prerequisites
+
+### Backend
+
+## Usage
+
+## Testing
+
+### Backend
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+```
