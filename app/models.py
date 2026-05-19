@@ -17,6 +17,12 @@ class StatusEnum(str, enum.Enum):
     resolved = "resolved"
 
 class Bug(Base):
+    """
+    Represents a bug report in the system.
+    Uses UUID4 for primary key.
+    Consider UUID7 for better index performance at scale when full native support is available.
+    """
+
     __tablename__ = "bugs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
