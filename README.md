@@ -1,56 +1,81 @@
-1. Bug Hunt v2.0 is a planned update to include a CRUD database with API endpoints and is currently in progress 04/29/2026.
+# Bug Hunt v2
 
-2. Users are able to create project-specific tickets that allows them to keep track of bugs, issues, and feature requests.
-   It also offers a dashboard to keep track of useful metrics and measure progress.
+A bug tracking REST API built with FastAPI and PostgreSQL. Users can create project-specific tickets to track bugs, issues, and feature requests.
 
-3. Project's Future - This project is partially complete and has a ton of room to grow. It has taught me how to write
-   HTML, CSS, and JavaScript code. It has also taught me quite a bit about the software engineering process. This project was the result of my senior capstone project and the original document can be found [here](https://docs.google.com/document/d/1QBhnF3IqqH9kL8IIt968BQnGg4jEVfZGOBpG-NalNZs/edit?usp=sharing) (Archived).
+> **Status:** In active development
 
-4. Website's URL (Still in Development): https://bug-hunt-b860b.web.app
+## Tech Stack
 
-5. Additional information regarding the project's progress can be found on the website directly.
-Changelogs
-
-v1.0
-The project has been implemented through the use of Firebase, JavaScript, and JavaScript libraries.
-Original Link: https://github.com/JqJohnny/BugTracker
-
-v2.0 (Planned 05/01/2026)
-The project scope has been expanded to include a CRUD database with API endpoints. As this was a pivot from the original project, a new capstone document will be drafted to reflect changes alongside it being it's own project with the original serving as a template. 
-
-Additionally, AWS is in consideration for future implementation.
-
-Tech Stack (To Be Added)
-Node.js
-
-# bug-hunt-v2
-
-Bug Hunt v2.0 is a planned update to include a CRUD database with API endpoints and is currently in progress 04/29/2026.
+**Backend:** FastAPI, Python, SQLAlchemy  
+**Database:** PostgreSQL  
+**Caching:** Redis (planned)  
+**Infrastructure:** Docker (planned), AWS (planned)  
 
 ## Project Structure
 
-### Backend
-
-### Frontend
-
-### Database
-
-### AI Integration
-
-
-### Caching
+```
+bug-hunt-v2/
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   ├── models.py
+│   └── schemas.py
+```
 
 ## Prerequisites
 
-### Backend
+- Python 3.12+
+- PostgreSQL
 
-## Usage
+## Getting Started
 
-## Testing
+```bash
+# Clone the repo
+git clone https://github.com/JqJohnny/bug-tracker-v2
 
-### Backend
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment variables
+cp .env.example .env
+
+# Run the server
+uvicorn app.main:app --reload
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check |
+| GET | `/api/bugs` | Get all bugs |
+| POST | `/api/bugs` | Create a bug |
+| PUT | `/api/bugs/:id` | Update a bug |
+| DELETE | `/api/bugs/:id` | Delete a bug |
+
+## Roadmap
+
+- [x] Database models and schema
+- [ ] CRUD API endpoints
+- [ ] Authentication
+- [ ] Redis caching
+- [ ] Docker containerization
+- [ ] AWS deployment
+
+## Changelog
+
+**v2.0** *(In progress)*
+Rebuilt as a REST API with FastAPI, PostgreSQL, and SQLAlchemy. Expanded scope includes proper database architecture, API endpoints, and cloud deployment.
+
+**v1.0**
+Original capstone project built with Firebase and JavaScript.
+[View v1.0](https://github.com/JqJohnny/BugTracker) | [Archived capstone document](https://docs.google.com/document/d/1QBhnF3IqqH9kL8IIt968BQnGg4jEVfZGOBpG-NalNZs/edit?usp=sharing)
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
+MIT License. See [LICENSE](LICENSE) for details.
