@@ -25,6 +25,6 @@ class Bug(Base):
     priority = Column(Enum(PriorityEnum), default=PriorityEnum.low)
     status = Column(Enum(StatusEnum), default=StatusEnum.new)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc)) # Check to ensure correctly working
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.now(datetime.timezone.utc))
+    updated_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc), onupdate=datetime.datetime.now(datetime.timezone.utc))
 
     
