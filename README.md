@@ -61,7 +61,7 @@ uvicorn app.main:app --reload
 ## Roadmap
 
 - [x] Database models and schema
-- [ ] CRUD API endpoints
+- [x] CRUD API endpoints
 - [ ] Authentication
 - [ ] Redis caching
 - [ ] Docker containerization

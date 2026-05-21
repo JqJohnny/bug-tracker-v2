@@ -27,7 +27,7 @@ def get_bug(bug_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Bug not found")
     return bug
 
-@router.patch("/{bug_id}", resposne_model=BugResponse)
+@router.patch("/{bug_id}", response_model=BugResponse)
 def update_bug(bug_id: str, updates: BugUpdate, db: Session = Depends(get_db)):
     bug = db.query(Bug).filter(Bug.id == bug_id).first()
     if not bug:
