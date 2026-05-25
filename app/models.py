@@ -52,7 +52,7 @@ class Bug(Base):
     status = Column(Enum(StatusEnum), default=StatusEnum.new)
     created_at = Column(
         DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )  # Check to ensure correctly working
+    )
     updated_at = Column(
         DateTime,
         default=datetime.datetime.now(datetime.timezone.utc),
