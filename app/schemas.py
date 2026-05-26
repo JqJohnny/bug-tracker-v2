@@ -17,11 +17,28 @@ class StatusEnum(str, enum.Enum):
     resolved = "resolved"
 
 
+class UserCreate(BaseModel):
+    name: str
+    email: str
+
+
+class UserResponse(BaseModel):
+    id: UUID
+    name: str
+    email: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class BugCreate(BaseModel):
     title: str
     description: Optional[str] = None
     priority: PriorityEnum = PriorityEnum.low
     status: StatusEnum = StatusEnum.new
+    author_id: UUID
+    assignee_id: Optional[UUID] = None
 
 
 class BugUpdate(BaseModel):
@@ -39,6 +56,8 @@ class BugResponse(BaseModel):
     status: StatusEnum
     created_at: datetime
     updated_at: datetime
+    author_id: UUID
+    assignee_id: Optional[UUID] = None
 
     class Config:
         from_attributes = True
