@@ -50,9 +50,7 @@ class Bug(Base):
     description = Column(Text)  # Default - nullable = True
     priority = Column(Enum(PriorityEnum), default=PriorityEnum.low)
     status = Column(Enum(StatusEnum), default=StatusEnum.new)
-    created_at = Column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )
+    created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     updated_at = Column(
         DateTime,
         default=datetime.datetime.now(datetime.timezone.utc),
