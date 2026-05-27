@@ -25,3 +25,6 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+
+@router.get("/{user_id}", response_model=UserResponse)
+def 
