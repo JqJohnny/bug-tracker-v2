@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import engine, Base
-from .routes import bugs
+from .routes import bugs, users
 
 Base.metadata.create_all(bind=engine)
 
@@ -9,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(bugs.router)
+app.include_router(users.router)
 
 
 @app.get("/api/health")
