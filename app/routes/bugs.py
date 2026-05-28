@@ -2,16 +2,29 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Bug
-from ..schemas import BugCreate, BugUpdate, BugResponse
-from typing import List
+from ..schemas import BugCreate, BugUpdate, BugResponse, StatusEnum, PriorityEnum
+from typing import List, Optional
 
 router = APIRouter(prefix="/api/bugs", tags=["bugs"])
 
 
 @router.get("/", response_model=List[BugResponse])
-def get_bugs(db: Session = Depends(get_db)):
-    bugs = db.query(Bug).all()
-    return bugs
+def get_bugs(
+    db: Session = Depends(get_db),
+    status: Optional[StatusEnum] = None,
+    priority: Optional[PriorityEnum] = None,
+    assignee_id: Optional[str] = None,
+):
+    query = db.query(Bug)
+
+    if status:
+        query = query.filter(Bug.status == status)
+    if priority:
+        query = query.filter(Bug.priority == priority)
+    if assignee_id:
+        query = query.filter(Bug.assignee_id == assignee_id)
+
+    return query.all()
 
 
 @router.post("/", response_model=BugResponse, status_code=201)
