@@ -9,6 +9,7 @@ class PriorityEnum(str, enum.Enum):
     low = "low"
     medium = "medium"
     high = "high"
+    critical = "critical"
 
 
 class StatusEnum(str, enum.Enum):
