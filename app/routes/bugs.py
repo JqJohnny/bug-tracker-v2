@@ -13,6 +13,7 @@ def get_bugs(
     db: Session = Depends(get_db),
     status: Optional[StatusEnum] = None,
     priority: Optional[PriorityEnum] = None,
+    author_id: Optional[str] = None,
     assignee_id: Optional[str] = None,
 ):
     query = db.query(Bug)
@@ -21,6 +22,8 @@ def get_bugs(
         query = query.filter(Bug.status == status)
     if priority:
         query = query.filter(Bug.priority == priority)
+    if author_id:
+        query = query.filter(Bug.author_id == author_id)
     if assignee_id:
         query = query.filter(Bug.assignee_id == assignee_id)
 
