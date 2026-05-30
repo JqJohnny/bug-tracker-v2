@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import Bug
-from ..schemas import BugCreate, BugUpdate, BugResponse, StatusEnum, PriorityEnum
+from ..models import Bug, StatusEnum, PriorityEnum
+from ..schemas import BugCreate, BugUpdate, BugResponse
 from typing import List, Optional
 
 router = APIRouter(prefix="/api/bugs", tags=["bugs"])
