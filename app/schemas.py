@@ -3,25 +3,12 @@ from typing import Optional
 from datetime import datetime
 from uuid import UUID
 import enum
-
-
-class PriorityEnum(str, enum.Enum):
-    low = "low"
-    medium = "medium"
-    high = "high"
-    critical = "critical"
-
-
-class StatusEnum(str, enum.Enum):
-    new = "new"
-    in_progress = "in_progress"
-    resolved = "resolved"
+from .models import PriorityEnum, StatusEnum
 
 
 class UserCreate(BaseModel):
     name: str
     email: str
-
 
 class UserResponse(BaseModel):
     id: UUID
