@@ -2,13 +2,13 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
-import enum
 from .models import PriorityEnum, StatusEnum
 
 
 class UserCreate(BaseModel):
     name: str
     email: str
+
 
 class UserResponse(BaseModel):
     id: UUID
