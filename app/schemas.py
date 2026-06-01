@@ -24,7 +24,6 @@ class BugCreate(BaseModel):
     title: str
     description: Optional[str] = None
     priority: PriorityEnum = PriorityEnum.low
-    status: StatusEnum = StatusEnum.new
     author_id: UUID
     assignee_id: Optional[UUID] = None
 
