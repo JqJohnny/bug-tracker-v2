@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
 from uuid import UUID
 from .models import PriorityEnum, StatusEnum
@@ -22,19 +21,19 @@ class UserResponse(BaseModel):
 
 class ProjectCreate(BaseModel):
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     owner_id: UUID
 
 
 class ProjectUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
+    name: str | None = None
+    description: str | None = None
 
 
 class ProjectResponse(BaseModel):
     id: UUID
     name: str
-    description: Optional[str]
+    description: str | None
     owner_id: UUID
     created_at: datetime
     updated_at: datetime
@@ -45,31 +44,31 @@ class ProjectResponse(BaseModel):
 
 class BugCreate(BaseModel):
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     priority: PriorityEnum = PriorityEnum.low
     author_id: UUID
-    assignee_id: Optional[UUID] = None
+    assignee_id: UUID | None = None
     project_id: UUID
 
 
 class BugUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    priority: Optional[PriorityEnum] = None
-    status: Optional[StatusEnum] = None
-    assignee_id: Optional[UUID] = None
+    title: str | None = None
+    description: str | None = None
+    priority: PriorityEnum | None = None
+    status: StatusEnum | None = None
+    assignee_id: UUID | None = None
 
 
 class BugResponse(BaseModel):
     id: UUID
     title: str
-    description: Optional[str]
+    description: str | None
     priority: PriorityEnum
     status: StatusEnum
     created_at: datetime
     updated_at: datetime
     author_id: UUID
-    assignee_id: Optional[UUID] = None
+    assignee_id: UUID | None = None
     project_id: UUID
 
     class Config:
