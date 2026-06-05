@@ -24,3 +24,11 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_project)
     return new_project
+
+
+@router.get("/{project_id}", router_model=ProjectResponse)
+def get_project(project_id: str, db: Session = Depends(get_db)):
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+         raise HTTPException(status_code=404, detail="Project not found")
+    return project
