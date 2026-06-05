@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import Bug, StatusEnum, PriorityEnum
 from ..schemas import BugCreate, BugUpdate, BugResponse
-from typing import List, Optional
+from typing import List
 
 router = APIRouter(prefix="/api/bugs", tags=["bugs"])
 
@@ -11,10 +11,10 @@ router = APIRouter(prefix="/api/bugs", tags=["bugs"])
 @router.get("/", response_model=List[BugResponse])
 def get_bugs(
     db: Session = Depends(get_db),
-    status: Optional[StatusEnum] = None,
-    priority: Optional[PriorityEnum] = None,
-    author_id: Optional[str] = None,
-    assignee_id: Optional[str] = None,
+    status: StatusEnum | None = None,
+    priority: PriorityEnum | None = None,
+    author_id: str | None = None,
+    assignee_id: str | None = None,
 ):
     query = db.query(Bug)
 
