@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import engine, Base
-from .routes import bugs, users
+from .routes import bugs, users, projects
 
 Base.metadata.create_all(bind=engine)
 
@@ -10,7 +10,7 @@ app = FastAPI(
 
 app.include_router(bugs.router)
 app.include_router(users.router)
-
+app.include_router(projects.router)
 
 @app.get("/api/health")
 def health_check():
