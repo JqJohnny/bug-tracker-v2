@@ -30,5 +30,19 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
 def get_project(project_id: str, db: Session = Depends(get_db)):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
-         raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
+
+
+@router.patch("/{project_id}", response_model=ProjectUpdate)
+def update_project(
+    project_id: str, updates: ProjectUpdate, db: Session = Depends(get_db)
+):
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    for key, value in updates.model_dump(exclude_unset=True).items():
+        setattr(project, key, value)
+    db.commit()
+    db.refresh(project)
     return project
