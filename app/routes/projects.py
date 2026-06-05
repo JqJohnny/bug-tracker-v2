@@ -19,7 +19,7 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     owner = db.query(User).filter(User.id == project.owner_id).first()
     if not owner:
         raise HTTPException(status_code=404, detail="Owner not found")
-    new_project = Project(**project.model_dump)
+    new_project = Project(**project.model_dump())
     db.add(new_project)
     db.commit()
     db.refresh(new_project)
