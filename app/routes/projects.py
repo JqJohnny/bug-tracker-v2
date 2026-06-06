@@ -48,7 +48,7 @@ def update_project(
     return project
 
 
-@router.delete("/{project_id}", response_model=ProjectResponse)
+@router.delete("/{project_id}", status_code=204)
 def delete_project(project_id: str, db: Session = Depends(get_db)):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
@@ -56,3 +56,31 @@ def delete_project(project_id: str, db: Session = Depends(get_db)):
     db.delete(project)
     db.commit()
 
+
+@router.post("/{project_id}/contributors/{user_id}", status_code=201)
+def add_contributor(project_id: str, user_id: str, db: Session = Depends(get_db)):
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user in project.contributors:
+        raise HTTPException(status_code=400, detail="User is already a contributor")
+    project.contributors.append(user)
+    db.commit()
+    return {"message": "Contributor added"}
+
+
+@router.delete("/{project_id}/contributors/{user_id}", status_code=204)
+def remove_contributor(project_id: str, user_id: str, db: Session = Depends(get_db)):
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user not in project.contributors:
+        raise HTTPException(status_code=400, detail="User is not a contributor")
+    project.contributors.remove(user)
+    db.commit()
