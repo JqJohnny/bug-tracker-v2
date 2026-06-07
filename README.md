@@ -63,6 +63,7 @@ uvicorn app.main:app --reload
 - [x] Database models and schema
 - [x] CRUD API endpoints
 - [ ] Authentication
+- [ ] Authorization
 - [ ] Redis caching
 - [ ] Docker containerization
 - [ ] AWS deployment
