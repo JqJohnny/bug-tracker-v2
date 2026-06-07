@@ -14,7 +14,7 @@ def get_projects(db: Session = Depends(get_db)):
     return projects
 
 
-@router.post("/", response_model=ProjectCreate, status_code=201)
+@router.post("/", response_model=ProjectResponse, status_code=201)
 def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     owner = db.query(User).filter(User.id == project.owner_id).first()
     if not owner:
