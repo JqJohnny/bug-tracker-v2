@@ -34,7 +34,7 @@ def get_project(project_id: str, db: Session = Depends(get_db)):
     return project
 
 
-@router.patch("/{project_id}", response_model=ProjectUpdate)
+@router.patch("/{project_id}", response_model=ProjectResponse)
 def update_project(
     project_id: str, updates: ProjectUpdate, db: Session = Depends(get_db)
 ):
