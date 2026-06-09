@@ -30,7 +30,7 @@ bug-tracker-v2/
 
 ## Prerequisites
 
-- Python 3.12+
+- Python 3.14+
 - PostgreSQL
 
 ## Getting Started
