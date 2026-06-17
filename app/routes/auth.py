@@ -10,4 +10,6 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 @router.post("/register", response_model=UserResponse, status_code=201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter()
+    existing = db.query(User).filter(user.id == "User_id")
+    if existing:
+        HTTPException
