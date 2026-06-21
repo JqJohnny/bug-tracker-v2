@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from ..database import get_db
-from ..models import Bug, StatusEnum, PriorityEnum
-from ..schemas import BugCreate, BugUpdate, BugResponse
 from typing import List
+from ..auth import get_current_user
+from ..database import get_db
+from ..models import Bug, User, StatusEnum, PriorityEnum
+from ..schemas import BugCreate, BugUpdate, BugResponse
 
 router = APIRouter(prefix="/api/bugs", tags=["bugs"])
 
@@ -31,8 +32,12 @@ def get_bugs(
 
 
 @router.post("/", response_model=BugResponse, status_code=201)
-def create_bug(bug: BugCreate, db: Session = Depends(get_db)):
-    new_bug = Bug(**bug.model_dump())
+def create_bug(
+    bug: BugCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    new_bug = Bug(**bug.model_dump(), author_id=current_user.id)
     db.add(new_bug)
     db.commit()
     db.refresh(new_bug)
