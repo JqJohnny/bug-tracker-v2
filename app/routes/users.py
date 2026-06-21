@@ -13,17 +13,17 @@ def get_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
-
-@router.post("/", response_model=UserResponse, status_code=201)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.email == user.email).first()
-    if existing:
-        raise HTTPException(status_code=409, detail="Email already registered")
-    new_user = User(**user.model_dump())
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+# Old user route - Keeping just in case needed for now
+# @router.post("/", response_model=UserResponse, status_code=201)
+# def create_user(user: UserCreate, db: Session = Depends(get_db)):
+#     existing = db.query(User).filter(User.email == user.email).first()
+#     if existing:
+#         raise HTTPException(status_code=409, detail="Email already registered")
+#     new_user = User(**user.model_dump())
+#     db.add(new_user)
+#     db.commit()
+#     db.refresh(new_user)
+#     return new_user
 
 
 @router.get("/{user_id}", response_model=UserResponse)
