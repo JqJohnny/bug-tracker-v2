@@ -52,7 +52,6 @@ class BugCreate(BaseModel):
     title: str
     description: str | None = None
     priority: PriorityEnum = PriorityEnum.low
-    author_id: UUID
     assignee_id: UUID | None = None
     project_id: UUID
 
