@@ -35,7 +35,7 @@ def get_bugs(
 def create_bug(
     bug: BugCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     new_bug = Bug(**bug.model_dump(), author_id=current_user.id)
     db.add(new_bug)
@@ -53,10 +53,17 @@ def get_bug(bug_id: str, db: Session = Depends(get_db)):
 
 
 @router.patch("/{bug_id}", response_model=BugResponse)
-def update_bug(bug_id: str, updates: BugUpdate, db: Session = Depends(get_db)):
+def update_bug(
+    bug_id: str,
+    updates: BugUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     bug = db.query(Bug).filter(Bug.id == bug_id).first()
     if not bug:
         raise HTTPException(status_code=404, detail="Bug not found")
+    if bug.author_id != current_user.id and bug.assignee_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this bug")
     for key, value in updates.model_dump(exclude_unset=True).items():
         setattr(bug, key, value)
     db.commit()
@@ -65,9 +72,15 @@ def update_bug(bug_id: str, updates: BugUpdate, db: Session = Depends(get_db)):
 
 
 @router.delete("/{bug_id}", status_code=204)
-def delete_bug(bug_id: str, db: Session = Depends(get_db)):
+def delete_bug(
+    bug_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     bug = db.query(Bug).filter(Bug.id == bug_id).first()
     if not bug:
         raise HTTPException(status_code=404, detail="Bug not found")
+    if bug.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this bug")
     db.delete(bug)
     db.commit()
