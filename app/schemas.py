@@ -28,7 +28,6 @@ class TokenResponse(BaseModel):
 class ProjectCreate(BaseModel):
     name: str
     description: str | None = None
-    owner_id: UUID
 
 
 class ProjectUpdate(BaseModel):
