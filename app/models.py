@@ -37,6 +37,7 @@ class User(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
     password = Column(String(255), nullable=True)
+    google_id = Column(String(255), unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
     assigned_bugs = relationship(
