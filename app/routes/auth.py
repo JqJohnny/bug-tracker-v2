@@ -27,10 +27,20 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
     user = db.query(User).filter(User.email == form_data.username).first()
-    if not user or not user.password or not verify_password(form_data.password, user.password):
+    if (
+        not user
+        or not user.password
+        or not verify_password(form_data.password, user.password)
+    ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
         )
     token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
+
+
+@router.get("/google/login")
+async def google_login(request: Request):
+    redirect_uri = request.url_for("google_callback")
+    return await oauth.google.authorize_redirect(request, redirect_uri)
