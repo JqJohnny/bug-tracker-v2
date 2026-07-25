@@ -54,3 +54,21 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Could not fetch user info from Google"
         )
+    google_id = user_info["sub"]
+    email = user_info["email"]
+    name = user_info.get("name", email)
+
+    user = db.query(User).filter(User.google_id == google_id).first()
+    if not user:
+        user = db.query(User).filter(User.email == email).first()
+        if user:
+            user.google_id = google_id
+        else:
+            user = User(name=name, email=email, password=None, google_id=google_id)
+            db.add(user)
+
+    db.commit()
+    db.refresh(user)
+
+    access_token = create_access_token(data={"sub": str(user.id)})
+    return {"access_token": access_token, "token_type": "bearer"}
