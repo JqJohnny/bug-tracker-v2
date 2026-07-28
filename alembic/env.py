@@ -1,14 +1,15 @@
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-from alembic import context
-import sys
 import os
+import sys
+from logging.config import fileConfig
+
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.database import Base, DATABASE_URL
-from app.models import User, Project, Bug  # noqa: F401
+from app.database import DATABASE_URL, Base
+from app.models import Bug, Project, User  # noqa: F401
 
 config = context.config
 

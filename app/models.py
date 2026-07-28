@@ -1,10 +1,12 @@
-from sqlalchemy import Column, String, Text, Enum, DateTime, ForeignKey, Table
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from .database import Base
-import uuid
 import datetime
 import enum
+import uuid
+
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, String, Table, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
+from .database import Base
 
 
 class PriorityEnum(str, enum.Enum):
