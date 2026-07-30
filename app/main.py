@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine
 from .routes import auth, bugs, projects, users
