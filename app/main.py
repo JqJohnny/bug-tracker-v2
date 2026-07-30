@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -9,6 +11,9 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="BugHunt API", description="A bug tracking REST API", version="1.0.0"
 )
+
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
+
 
 app.include_router(auth.router)
 app.include_router(bugs.router)
