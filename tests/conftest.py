@@ -1,12 +1,14 @@
+import os
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.main import app
+
+from app.auth import create_access_token, hash_password
 from app.database import Base, get_db
+from app.main import app
 from app.models import User
-from app.auth import hash_password, create_access_token
-import os
 
 TEST_DATABASE_URL = os.getenv(
     "TEST_DATABASE_URL", "postgresql://postgres:5566@localhost:5432/bughunt_test"
