@@ -41,18 +41,29 @@ def client(db):
             yield db
         finally:
             pass
+
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
     app.dependency_overrides.clear()
+
 
 @pytest.fixture()
 def test_user(db):
     user = User(
         name="Test User",
         email="test@example.com",
-        password=hash_password("testpassword123")
+        password=hash_password("testpassword123"),
     )
     db.add(user)
     db.flush()
     return user
 
+
+@pytest.fixture()
+def auth_token(test_user):
+    return create_access_token(data={"sub": str(test_user.id)})
+
+
+@pytest.fixture()
+def auth_headers(auth_token):
+    return {"Authorization": f"Bearer {auth_token}"}
