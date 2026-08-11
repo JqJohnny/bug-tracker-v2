@@ -1,0 +1,141 @@
+import pytest
+from app.models import User, Project
+from app.auth import hash_password, create_access_token
+
+
+def make_user(db, email: str, name: str = "Test User") -> User:
+    user = User(name=name, email=email, password=hash_password("testpassword123"))
+    db.add(user)
+    db.flush()
+    return user
+
+
+def make_project(db, owner) -> Project:
+    project = Project(name="Test Project", owner_id=owner.id)
+    db.add(project)
+    db.flush()
+    return project
+
+
+def make_token(user: User) -> dict:
+    token = create_access_token(data={"sub": str(user.id)})
+    return {"Authorization": f"Bearer {token}"}
+
+
+# --- Happy path ---
+
+
+def test_create_bug(client, test_user, auth_headers, db):
+    project = make_project(db, test_user)
+    response = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["title"] == "Test bug"
+    assert data["author_id"] == str(test_user.id)
+
+
+def test_get_bugs(client, test_user, auth_headers, db):
+    project = make_project(db, test_user)
+    client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    response = client.get("/api/bugs/")
+    assert response.status_code == 200
+    assert len(response.json()) >= 1
+
+
+def test_update_bug_as_author(client, test_user, auth_headers, db):
+    project = make_project(db, test_user)
+    create = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    bug_id = create.json()["id"]
+    response = client.patch(
+        f"/api/bugs/{bug_id}", json={"title": "Updated title"}, headers=auth_headers
+    )
+    assert response.status_code == 200
+    assert response.json()["title"] == "Updated title"
+
+
+def test_update_bug_as_assignee(client, test_user, auth_headers, db):
+    assignee = make_user(db, "assignee@example.com")
+    assignee_headers = make_token(assignee)
+    project = make_project(db, test_user)
+    create = client.post(
+        "/api/bugs/",
+        json={
+            "title": "Test bug",
+            "project_id": str(project.id),
+            "assignee_id": str(assignee.id),
+        },
+        headers=auth_headers,
+    )
+    bug_id = create.json()["id"]
+    response = client.patch(
+        f"/api/bugs/{bug_id}",
+        json={"title": "Assignee updated"},
+        headers=assignee_headers,
+    )
+    assert response.status_code == 200
+    assert response.json()["title"] == "Assignee updated"
+
+
+def test_delete_bug_as_author(client, test_user, auth_headers, db):
+    project = make_project(db, test_user)
+    create = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    bug_id = create.json()["id"]
+    response = client.delete(f"/api/bugs/{bug_id}", headers=auth_headers)
+    assert response.status_code == 204
+
+
+# --- Auth / ownership checks ---
+
+
+def test_create_bug_unauthenticated(client, db, test_user):
+    project = make_project(db, test_user)
+    response = client.post(
+        "/api/bugs/", json={"title": "Test bug", "project_id": str(project.id)}
+    )
+    assert response.status_code == 401
+
+
+def test_update_bug_as_unrelated_user(client, test_user, auth_headers, db):
+    other_user = make_user(db, "other@example.com")
+    other_headers = make_token(other_user)
+    project = make_project(db, test_user)
+    create = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    bug_id = create.json()["id"]
+    response = client.patch(
+        f"/api/bugs/{bug_id}", json={"title": "Should fail"}, headers=other_headers
+    )
+    assert response.status_code == 403
+
+
+def test_delete_bug_as_non_author(client, test_user, auth_headers, db):
+    other_user = make_user(db, "nonauthor@example.com")
+    other_headers = make_token(other_user)
+    project = make_project(db, test_user)
+    create = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
+    bug_id = create.json()["id"]
+    response = client.delete(f"/api/bugs/{bug_id}", headers=other_headers)
+    assert response.status_code == 403
