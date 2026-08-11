@@ -1,6 +1,5 @@
-import pytest
-from app.models import User, Project
-from app.auth import hash_password, create_access_token
+from app.auth import create_access_token, hash_password
+from app.models import Project, User
 
 
 def make_user(db, email: str, name: str = "Test User") -> User:
