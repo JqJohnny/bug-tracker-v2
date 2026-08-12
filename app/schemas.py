@@ -18,7 +18,7 @@ class UserResponse(BaseModel):
     email: str
     created_at: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -45,7 +45,7 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -77,5 +77,5 @@ class BugResponse(BaseModel):
     assignee_id: UUID | None = None
     project_id: UUID
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
