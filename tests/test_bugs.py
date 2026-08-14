@@ -21,7 +21,7 @@ def make_token(user: User) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 
-# --- Happy path ---
+# --- Happy path --- #
 
 
 def test_create_bug(client, test_user, auth_headers, db):
@@ -99,7 +99,7 @@ def test_delete_bug_as_author(client, test_user, auth_headers, db):
     assert response.status_code == 204
 
 
-# --- Auth / ownership checks ---
+# --- Auth / ownership checks --- #
 
 
 def test_create_bug_unauthenticated(client, db, test_user):
