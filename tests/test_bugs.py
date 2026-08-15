@@ -138,3 +138,5 @@ def test_delete_bug_as_non_author(client, test_user, auth_headers, db):
     bug_id = create.json()["id"]
     response = client.delete(f"/api/bugs/{bug_id}", headers=other_headers)
     assert response.status_code == 403
+
+# --- Sad path --- #
