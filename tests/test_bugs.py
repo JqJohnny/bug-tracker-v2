@@ -162,7 +162,7 @@ def test_create_bug_invalid_priority(client, test_user, auth_headers, db):
         "title": "Test bug",
         "project_id": str(project.id),
         "priority": "urgent"
-    }, headers=auth_headers) is
+    }, headers=auth_headers)
     assert response.status_code == 422
 
 
