@@ -139,42 +139,44 @@ def test_delete_bug_as_non_author(client, test_user, auth_headers, db):
     response = client.delete(f"/api/bugs/{bug_id}", headers=other_headers)
     assert response.status_code == 403
 
+
 # --- Invalid input --- #
+
 
 def test_create_bug_missing_title(client, test_user, auth_headers, db):
     project = make_project(db, test_user)
-    response = client.post("/api/bugs/", json={
-        "project_id": str(project.id)
-    }, headers=auth_headers)
+    response = client.post(
+        "/api/bugs/", json={"project_id": str(project.id)}, headers=auth_headers
+    )
     assert response.status_code == 422
 
 
 def test_create_bug_missing_project_id(client, test_user, auth_headers):
-    response = client.post("/api/bugs/", json={
-        "title": "Test bug"
-    }, headers=auth_headers)
+    response = client.post(
+        "/api/bugs/", json={"title": "Test bug"}, headers=auth_headers
+    )
     assert response.status_code == 422
 
 
 def test_create_bug_invalid_priority(client, test_user, auth_headers, db):
     project = make_project(db, test_user)
-    response = client.post("/api/bugs/", json={
-        "title": "Test bug",
-        "project_id": str(project.id),
-        "priority": "urgent"
-    }, headers=auth_headers)
+    response = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id), "priority": "urgent"},
+        headers=auth_headers,
+    )
     assert response.status_code == 422
 
 
 def test_update_bug_invalid_status(client, test_user, auth_headers, db):
     project = make_project(db, test_user)
-    create = client.post("/api/bugs/", json={
-        "title": "Test bug",
-        "project_id": str(project.id)
-    }, headers=auth_headers)
+    create = client.post(
+        "/api/bugs/",
+        json={"title": "Test bug", "project_id": str(project.id)},
+        headers=auth_headers,
+    )
     bug_id = create.json()["id"]
-    response = client.patch(f"/api/bugs/{bug_id}", json={
-        "status": "deleted"
-    }, headers=auth_headers)
+    response = client.patch(
+        f"/api/bugs/{bug_id}", json={"status": "deleted"}, headers=auth_headers
+    )
     assert response.status_code == 422
-
