@@ -109,18 +109,6 @@ pytest tests/ -v
 | POST | `/api/projects/{id}/contributors/{user_id}` | Add contributor (owner only) |
 | DELETE | `/api/projects/{id}/contributors/{user_id}` | Remove contributor (owner only) |
 
-## Environment Variables
-DB_HOST=localhost
-DB_USER=postgres
-DB_PASSWORD=
-DB_NAME=bughunt
-DB_PORT=5433
-SECRET_KEY=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-TEST_DATABASE_URL=postgresql://postgres:@localhost:5434/bughunt_test
-
-
 ## Roadmap
 
 - [x] Database models and schema
