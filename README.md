@@ -11,7 +11,7 @@ A bug tracking REST API built with FastAPI and PostgreSQL. Users can create proj
 **Infrastructure:** Docker, AWS (planned)  
 
 ## Project Structure
-
+```
 bug-tracker-v2/
 ├── alembic/
 │ └── versions/
@@ -36,7 +36,7 @@ bug-tracker-v2/
 ├── docker-compose.yml
 ├── Dockerfile
 └── requirements.txt
-
+```
 
 ## Prerequisites
 
