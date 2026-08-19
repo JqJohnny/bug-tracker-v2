@@ -39,7 +39,7 @@ jobs:
 
       - name: Run tests
         env:
-          TEST_DATABASE_URL: postgresql://postgres:${{ secrets.TEST_DB_PASSWORD }}@localhost:5434/bughunt_test
+          TEST_DATABASE_URL: postgresql://postgres:${{ secrets.DB_PASSWORD }}@localhost:5434/bughunt_test
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DB_HOST: localhost
           DB_USER: postgres
