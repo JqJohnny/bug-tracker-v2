@@ -41,4 +41,9 @@ jobs:
         env:
           TEST_DATABASE_URL: postgresql://postgres:5566@localhost:5434/bughunt_test
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: 5566
+          DB_NAME: bughunt
+          DB_PORT: 5433
         run: pytest tests/ -v
