@@ -3,10 +3,7 @@ import os
 from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 
-from .database import Base, engine
 from .routes import auth, bugs, projects, users
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="BugHunt API", description="A bug tracking REST API", version="1.0.0"
