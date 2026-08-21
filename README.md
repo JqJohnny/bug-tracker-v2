@@ -119,8 +119,8 @@ pytest tests/ -v
 - [x] Google OAuth
 - [x] Docker containerization
 - [x] Automated test suite (pytest)
-- [ ] CI/CD (GitHub Actions)
-- [ ] AWS deployment
+- [x] CI/CD (GitHub Actions)
+- [ ] Azure deployment
 
 ## Changelog
 
