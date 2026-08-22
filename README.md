@@ -8,7 +8,7 @@ A bug tracking REST API built with FastAPI and PostgreSQL. Users can create proj
 
 **Backend:** Python, FastAPI, SQLAlchemy  
 **Database:** PostgreSQL  
-**Infrastructure:** Docker, AWS (planned)  
+**Infrastructure:** Docker, Azure (planned)  
 
 ## Project Structure
 ```
