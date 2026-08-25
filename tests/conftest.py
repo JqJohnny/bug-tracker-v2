@@ -10,9 +10,7 @@ from app.database import Base, get_db
 from app.main import app
 from app.models import User
 
-TEST_DATABASE_URL = os.getenv(
-    "TEST_DATABASE_URL", "postgresql://postgres:5566@localhost:5434/bughunt_test"
-)
+TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
