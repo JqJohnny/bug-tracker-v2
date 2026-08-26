@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from ..auth import get_current_user
 from ..database import get_db
 from ..models import Project, User
 from ..schemas import ProjectCreate, ProjectResponse, ProjectUpdate
@@ -15,11 +16,12 @@ def get_projects(db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=ProjectResponse, status_code=201)
-def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
-    owner = db.query(User).filter(User.id == project.owner_id).first()
-    if not owner:
-        raise HTTPException(status_code=404, detail="Owner not found")
-    new_project = Project(**project.model_dump())
+def create_project(
+    project: ProjectCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    new_project = Project(**project.model_dump(), owner_id=current_user.id)
     db.add(new_project)
     db.commit()
     db.refresh(new_project)
@@ -36,11 +38,18 @@ def get_project(project_id: str, db: Session = Depends(get_db)):
 
 @router.patch("/{project_id}", response_model=ProjectResponse)
 def update_project(
-    project_id: str, updates: ProjectUpdate, db: Session = Depends(get_db)
+    project_id: str,
+    updates: ProjectUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+    if current_user.id != project.owner_id:
+        raise HTTPException(
+            status_code=403, detail="Not authorized to update this project"
+        )
     for key, value in updates.model_dump(exclude_unset=True).items():
         setattr(project, key, value)
     db.commit()
@@ -49,19 +58,37 @@ def update_project(
 
 
 @router.delete("/{project_id}", status_code=204)
-def delete_project(project_id: str, db: Session = Depends(get_db)):
+def delete_project(
+    project_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+    if current_user.id != project.owner_id:
+        raise HTTPException(
+            status_code=403, detail="Not authorized to delete this project"
+        )
     db.delete(project)
     db.commit()
 
 
 @router.post("/{project_id}/contributors/{user_id}", status_code=201)
-def add_contributor(project_id: str, user_id: str, db: Session = Depends(get_db)):
+def add_contributor(
+    project_id: str,
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+    if current_user.id != project.owner_id:
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to manage contributors on this project",
+        )
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -73,10 +100,20 @@ def add_contributor(project_id: str, user_id: str, db: Session = Depends(get_db)
 
 
 @router.delete("/{project_id}/contributors/{user_id}", status_code=204)
-def remove_contributor(project_id: str, user_id: str, db: Session = Depends(get_db)):
+def remove_contributor(
+    project_id: str,
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+    if current_user.id != project.owner_id:
+        raise HTTPException(
+            status_code=403,
+            detail="Not authorized to manage contributors on this project",
+        )
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
