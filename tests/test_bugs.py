@@ -1,25 +1,4 @@
-from app.auth import create_access_token, hash_password
-from app.models import Project, User
-
-
-def make_user(db, email: str, name: str = "Test User") -> User:
-    user = User(name=name, email=email, password=hash_password("testpassword123"))
-    db.add(user)
-    db.flush()
-    return user
-
-
-def make_project(db, owner) -> Project:
-    project = Project(name="Test Project", owner_id=owner.id)
-    db.add(project)
-    db.flush()
-    return project
-
-
-def make_token(user: User) -> dict:
-    token = create_access_token(data={"sub": str(user.id)})
-    return {"Authorization": f"Bearer {token}"}
-
+from tests.conftest import make_project, make_token, make_user
 
 # --- Happy path --- #
 

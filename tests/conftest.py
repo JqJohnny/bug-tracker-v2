@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from app.auth import create_access_token, hash_password
 from app.database import Base, get_db
 from app.main import app
-from app.models import User
+from app.models import Project, User
 
 load_dotenv()
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
@@ -69,3 +69,26 @@ def auth_token(test_user):
 @pytest.fixture()
 def auth_headers(auth_token):
     return {"Authorization": f"Bearer {auth_token}"}
+
+
+def make_user(db, email: str, name: str = "Test User") -> User:
+    user = User(
+        name=name,
+        email=email,
+        password=hash_password("testpassword123"),
+    )
+    db.add(user)
+    db.flush()
+    return user
+
+
+def make_project(db, owner) -> Project:
+    project = Project(name="Test Project", owner_id=owner.id)
+    db.add(project)
+    db.flush()
+    return project
+
+
+def make_token(user: User) -> dict:
+    token = create_access_token(data={"sub": str(user.id)})
+    return {"Authorization": f"Bearer {token}"}
