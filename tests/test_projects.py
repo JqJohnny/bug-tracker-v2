@@ -14,7 +14,7 @@ def test_create_project(client, test_user, auth_headers):
     assert data["owner_id"] == str(test_user.id)
 
 
-def test_get_project(client, test_user, auth_headers):
+def test_get_projects(client, auth_headers):
     client.post("/api/projects/", json={"name": "My Project"}, headers=auth_headers)
     response = client.get("/api/projects")
     assert response.status_code == 200
