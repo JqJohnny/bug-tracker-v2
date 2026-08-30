@@ -19,3 +19,13 @@ def test_get_projects(client, auth_headers):
     response = client.get("/api/projects")
     assert response.status_code == 200
     assert len(response.json()) >= 1
+
+
+def test_get_project(client, auth_headers):
+    create = client.post(
+        "/api/projects/", json={"name": "My Project"}, headers=auth_headers
+    )
+    project_id = create.json()["id"]
+    response = client.get(f"/api/projects/{project_id}")
+    assert response.status_code == 200
+    assert response.json()["id"] == project_id
