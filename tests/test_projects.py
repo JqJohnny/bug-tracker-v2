@@ -23,7 +23,6 @@ def test_get_projects(client, auth_headers):
 
 def test_get_project(client, test_user, db):
     project = make_project(db, test_user)
-    print(project)
     response = client.get(f"/api/projects/{project.id}")
     assert response.status_code == 200
     assert response.json()["id"] == str(project.id)
