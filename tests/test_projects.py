@@ -26,3 +26,12 @@ def test_get_project(client, test_user, db):
     response = client.get(f"/api/projects/{project.id}")
     assert response.status_code == 200
     assert response.json()["id"] == str(project.id)
+
+
+def test_update_project_as_owner(client, auth_headers, test_user, db):
+    project = make_project(db, test_user)
+    response = client.patch(f"/api/projects/{project.id}", json={
+        "name": "Updated Name"
+    }, headers=auth_headers)
+    assert response.status_code == 200
+    assert response.json()['name'] == "Updated Name"
