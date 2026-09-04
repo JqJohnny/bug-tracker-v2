@@ -30,8 +30,16 @@ def test_get_project(client, test_user, db):
 
 def test_update_project_as_owner(client, auth_headers, test_user, db):
     project = make_project(db, test_user)
-    response = client.patch(f"/api/projects/{project.id}", json={
-        "name": "Updated Name"
-    }, headers=auth_headers)
+    response = client.patch(
+        f"/api/projects/{project.id}",
+        json={"name": "Updated Name"},
+        headers=auth_headers,
+    )
     assert response.status_code == 200
-    assert response.json()['name'] == "Updated Name"
+    assert response.json()["name"] == "Updated Name"
+
+
+def test_delete_project(client, auth_headers, test_user, db):
+    project = make_project(db, test_user)
+    response = client.delete(f"/api/projects/{project.id}", headers=auth_headers)
+    assert response.status_code == 204
