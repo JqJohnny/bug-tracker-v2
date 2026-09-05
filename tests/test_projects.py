@@ -39,7 +39,7 @@ def test_update_project_as_owner(client, auth_headers, test_user, db):
     assert response.json()["name"] == "Updated Name"
 
 
-def test_delete_project(client, auth_headers, test_user, db):
+def test_delete_project_as_owner(client, auth_headers, test_user, db):
     project = make_project(db, test_user)
     response = client.delete(f"/api/projects/{project.id}", headers=auth_headers)
     assert response.status_code == 204
