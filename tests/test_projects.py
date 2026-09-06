@@ -43,3 +43,14 @@ def test_delete_project_as_owner(client, auth_headers, test_user, db):
     project = make_project(db, test_user)
     response = client.delete(f"/api/projects/{project.id}", headers=auth_headers)
     assert response.status_code == 204
+
+
+def test_add_contributor(client, auth_headers, test_user, db):
+    contributor = make_user(db, "contributor@example.com")
+    project = make_project(db, test_user)
+    response = client.post(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+    assert response.status_code == 201
+    assert response.json()["message"] == "Contributor added"
