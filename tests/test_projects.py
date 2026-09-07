@@ -54,3 +54,17 @@ def test_add_contributor(client, auth_headers, test_user, db):
     )
     assert response.status_code == 201
     assert response.json()["message"] == "Contributor added"
+
+
+def test_remove_contributor(client, auth_headers, test_user, db):
+    contributor = make_user(db, "contributor@example.com")
+    project = make_project(db, test_user)
+    client.post(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+    response = client.delete(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+    assert response.status_code == 204
