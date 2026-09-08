@@ -68,3 +68,16 @@ def test_remove_contributor(client, auth_headers, test_user, db):
         headers=auth_headers,
     )
     assert response.status_code == 204
+
+
+# --- Auth / ownership checks --- #
+
+def test_update_project_as_non_owner(client, test_user, db):
+    project = make_project(db, test_user)
+    non_owner = make_user(db, "nonowner@example.com")
+    non_owner_header = make_token(non_owner)
+    response = client.patch(f"/api/projects/{project.id}",
+                 json={"Name": "Unauthorized Updated Name"},
+                 headers=non_owner_header)
+    assert response.status_code == 403
+    assert project.name == "Test Project"
