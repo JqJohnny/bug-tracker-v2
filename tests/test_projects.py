@@ -92,3 +92,21 @@ def test_delete_project_as_non_owner(client, test_user, db):
     non_owner_header = make_token(non_owner)
     response = client.delete(f"/api/projects/{project.id}", headers=non_owner_header)
     assert response.status_code == 403
+
+
+# --- Invalid input --- #
+
+
+def test_add_duplicate_contributor(client, test_user, db, auth_headers):
+    contributor = make_user(db, "contributor@example.com")
+    project = make_project(db, test_user)
+    client.post(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+    response = client.post(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "User is already a contributor"
