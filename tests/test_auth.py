@@ -1,3 +1,7 @@
+from tests.conftest import make_user
+
+# --- Happy path --- #
+
 def test_register(client):
     response = client.post(
         "/api/auth/register",
@@ -28,3 +32,19 @@ def test_login(client):
     )
     assert response.status_code == 200
     assert "access_token" in response.json()
+
+
+# --- Invalid input --- #
+
+def test_duplicate_user(client, db):
+    make_user(db, "newuser@example.com")
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "name": "New User",
+            "email": "newuser@example.com",
+            "password": "securepassword123",
+        },
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Email already registered"
