@@ -40,7 +40,7 @@ def test_login(client):
 # --- Auth / ownership checks --- #
 
 
-def test_invalid_password(client, db):
+def test_login_invalid_password(client, db):
     make_user(db, "newuser@example.com")
     response = client.post(
         "/api/auth/login",
