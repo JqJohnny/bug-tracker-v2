@@ -1,3 +1,5 @@
+import pytest
+
 from tests.conftest import make_user
 
 # --- Happy path --- #
@@ -52,3 +54,14 @@ def test_duplicate_email(client, db):
     assert response.json()["detail"] == "Email already registered"
 
 
+@pytest.mark.parametrize(
+    "payload, missing_field",
+    [
+        ({"email": "test@example.com", "password": "securepassword123"}, "name"),
+        ({"name": "Test User", "password": "securepassword123"}, "email"),
+        ({"name": "Test User", "email": "test@example.com"}, "password"),
+    ],
+)
+def test_register_missing_fields(client, payload, missing_field):
+    response = client.post("/api/auth/register", json=payload)
+    assert response.status_code == 422, f"expected 422 when {missing_field} is missing"
