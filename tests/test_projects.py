@@ -1,7 +1,8 @@
 from tests.conftest import make_project, make_token, make_user
 
-
 # --- Happy path --- #
+
+
 def test_create_project(client, test_user, auth_headers):
     response = client.post(
         "/api/projects/",
