@@ -37,6 +37,22 @@ def test_login(client):
     assert "access_token" in response.json()
 
 
+# --- Auth / ownership checks --- #
+
+
+def test_invalid_password(client, db):
+    make_user(db, "newuser@example.com")
+    response = client.post(
+        "/api/auth/login",
+        data={
+            "username": "newuser@example.com",
+            "password": "invalidpassword",
+        },
+    )
+    assert response.status_code == 401
+    assert "access_token" not in response.json()
+
+
 # --- Invalid input --- #
 
 
