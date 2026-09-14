@@ -2,6 +2,7 @@ from tests.conftest import make_user
 
 # --- Happy path --- #
 
+
 def test_register(client):
     response = client.post(
         "/api/auth/register",
@@ -36,7 +37,8 @@ def test_login(client):
 
 # --- Invalid input --- #
 
-def test_duplicate_user(client, db):
+
+def test_duplicate_email(client, db):
     make_user(db, "newuser@example.com")
     response = client.post(
         "/api/auth/register",
@@ -48,3 +50,5 @@ def test_duplicate_user(client, db):
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "Email already registered"
+
+
