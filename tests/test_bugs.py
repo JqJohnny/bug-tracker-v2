@@ -130,7 +130,7 @@ def test_create_bug_missing_title(client, test_user, auth_headers, db):
     assert response.status_code == 422
 
 
-def test_create_bug_missing_project_id(client, test_user, auth_headers):
+def test_create_bug_missing_project_id(client, auth_headers):
     response = client.post(
         "/api/bugs/", json={"title": "Test bug"}, headers=auth_headers
     )
