@@ -81,3 +81,11 @@ def test_duplicate_email(client, db):
 def test_register_missing_fields(client, payload, missing_field):
     response = client.post("/api/auth/register", json=payload)
     assert response.status_code == 422, f"expected 422 when {missing_field} is missing"
+
+
+def test_login_nonexistent_email(client):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": "doesnotexist@example.com", "password": "somepassword"},
+    )
+    assert response.status_code == 401
