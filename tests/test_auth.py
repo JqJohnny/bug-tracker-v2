@@ -37,7 +37,7 @@ def test_login(client):
     assert "access_token" in response.json()
 
 
-# --- Auth / ownership checks --- #
+# --- Auth failures --- #
 
 
 def test_login_invalid_password(client, db):
@@ -51,6 +51,14 @@ def test_login_invalid_password(client, db):
     )
     assert response.status_code == 401
     assert "access_token" not in response.json()
+
+
+def test_login_nonexistent_email(client):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": "doesnotexist@example.com", "password": "somepassword"},
+    )
+    assert response.status_code == 401
 
 
 # --- Invalid input --- #
@@ -83,9 +91,19 @@ def test_register_missing_fields(client, payload, missing_field):
     assert response.status_code == 422, f"expected 422 when {missing_field} is missing"
 
 
-def test_login_nonexistent_email(client):
+@pytest.mark.parametrize(
+    "bad_email",
+    [
+        "notanemail",
+        "missing@domain",
+        "@nodomain.com",
+        "spaces in@email.com",
+        "double@@at.com",
+    ],
+)
+def test_register_invalid_email(client, bad_email):
     response = client.post(
-        "/api/auth/login",
-        data={"username": "doesnotexist@example.com", "password": "somepassword"},
+        "/api/auth/register",
+        json={"name": "Test User", "email": bad_email, "password": "securepassword123"},
     )
-    assert response.status_code == 401
+    assert response.status_code == 422
