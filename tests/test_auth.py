@@ -71,7 +71,7 @@ def test_duplicate_email(client, db):
         json={
             "name": "New User",
             "email": "newuser@example.com",
-            "password": "testpassword123",
+            "password": "strongpasswordgoeshere",
         },
     )
     assert response.status_code == 400

@@ -1,7 +1,8 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
+from zxcvbn import zxcvbn
 
 from .models import PriorityEnum, StatusEnum
 
@@ -10,6 +11,14 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
+
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, v):
+        result = zxcvbn(v)
+        if result["score"] < 2:
+            raise ValueError("Password is too weak")
+        return v
 
 
 class UserResponse(BaseModel):
