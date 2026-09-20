@@ -107,3 +107,20 @@ def test_register_invalid_email(client, bad_email):
         json={"name": "Test User", "email": bad_email, "password": "securepassword123"},
     )
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize(
+    "weak_password",
+    [
+        "abc",
+        "testpassword123",
+        'password'
+    ],
+)
+def test_register_weak_password(client, weak_password):
+    response = client.post(
+        "/api/auth/register",
+        json={"name": "Test User", "email": "newuser@example.com", "password": weak_password},
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == "Value error, Password is too weak"
