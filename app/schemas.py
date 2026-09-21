@@ -15,6 +15,10 @@ class UserCreate(BaseModel):
     @field_validator("password")
     @classmethod
     def password_strength(cls, v):
+        if v != v.strip():
+            raise ValueError("Password cannot have leading or trailing whitespace")
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
         result = zxcvbn(v)
         if result["score"] < 2:
             raise ValueError("Password is too weak")

@@ -110,17 +110,69 @@ def test_register_invalid_email(client, bad_email):
 
 
 @pytest.mark.parametrize(
-    "weak_password",
+    "bad_password",
     [
-        "abc",
-        "testpassword123",
-        'password'
+        " leadingspace123",
+        "trailingspace123 ",
+        "  bothsides123  ",
     ],
 )
-def test_register_weak_password(client, weak_password):
+def test_register_password_whitespace(client, bad_password):
     response = client.post(
         "/api/auth/register",
-        json={"name": "Test User", "email": "newuser@example.com", "password": weak_password},
+        json={
+            "name": "Test User",
+            "email": "newuser@example.com",
+            "password": bad_password,
+        },
+    )
+    assert response.status_code == 422
+    assert (
+        response.json()["detail"][0]["msg"]
+        == "Value error, Password cannot have leading or trailing whitespace"
+    )
+
+
+@pytest.mark.parametrize(
+    "short_password",
+    [
+        "abc",
+        "Ab1!",
+        "1234567",
+    ],
+)
+def test_register_password_too_short(client, short_password):
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "name": "Test User",
+            "email": "newuser@example.com",
+            "password": short_password,
+        },
+    )
+    assert response.status_code == 422
+    assert (
+        response.json()["detail"][0]["msg"]
+        == "Value error, Password must be at least 8 characters"
+    )
+
+
+@pytest.mark.parametrize(
+    "weak_password",
+    [
+        "testpassword123",
+        "password",
+        "qwertyuiop",
+    ],
+)
+def test_register_password_too_weak(client, weak_password):
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "name": "Test User",
+            "email": "newuser@example.com",
+            "password": weak_password,
+        },
     )
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == "Value error, Password is too weak"
