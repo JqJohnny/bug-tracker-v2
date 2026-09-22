@@ -10,8 +10,18 @@ router = APIRouter(prefix="/api/projects", tags=["projects"])
 
 
 @router.get("/", response_model=list[ProjectResponse])
-def get_projects(db: Session = Depends(get_db)):
-    projects = db.query(Project).all()
+def get_projects(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    projects = (
+        db.query(Project)
+        .filter(
+            (Project.owner_id == current_user.id)
+            | (Project.contributors.any(User.id == current_user.id))
+        )
+        .all()
+    )
     return projects
 
 

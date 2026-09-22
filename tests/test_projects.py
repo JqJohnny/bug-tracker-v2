@@ -3,7 +3,7 @@ from tests.conftest import make_project, make_token, make_user
 # --- Happy path --- #
 
 
-def test_create_project(client, test_user, auth_headers):
+def test_create_project(client, auth_headers, test_user):
     response = client.post(
         "/api/projects/",
         json={"name": "My Project", "description": "A test project"},
@@ -15,9 +15,9 @@ def test_create_project(client, test_user, auth_headers):
     assert data["owner_id"] == str(test_user.id)
 
 
-def test_get_projects(client, auth_headers):
-    client.post("/api/projects/", json={"name": "My Project"}, headers=auth_headers)
-    response = client.get("/api/projects")
+def test_get_projects(client, auth_headers, db, test_user):
+    make_project(db, test_user)
+    response = client.get("/api/projects/", headers=auth_headers)
     assert response.status_code == 200
     assert len(response.json()) >= 1
 
