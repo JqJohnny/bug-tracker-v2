@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from app.auth import create_access_token, hash_password
 from app.database import Base, get_db
 from app.main import app
-from app.models import Project, User
+from app.models import Bug, PriorityEnum, Project, StatusEnum, User
 
 load_dotenv()
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
@@ -69,6 +69,20 @@ def auth_token(test_user):
 @pytest.fixture()
 def auth_headers(auth_token):
     return {"Authorization": f"Bearer {auth_token}"}
+
+
+def make_bug(db, author, project, **kwargs) -> Bug:
+    bug = Bug(
+        title=kwargs.get("title", "Test Bug"),
+        author_id=author.id,
+        project_id=project.id,
+        status=kwargs.get("status", StatusEnum.open),
+        priority=kwargs.get("priority", PriorityEnum.low),
+        assignee_id=kwargs.get("assignee_id"),
+    )
+    db.add(bug)
+    db.flush()
+    return bug
 
 
 def make_user(db, email: str, name: str = "Test User") -> User:
