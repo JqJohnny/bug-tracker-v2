@@ -1,3 +1,4 @@
+from app.models import PriorityEnum, StatusEnum
 from tests.conftest import make_project, make_token, make_user
 
 # --- Happy path --- #
@@ -159,3 +160,12 @@ def test_update_bug_invalid_status(client, test_user, auth_headers, db):
         f"/api/bugs/{bug_id}", json={"status": "deleted"}, headers=auth_headers
     )
     assert response.status_code == 422
+
+
+# --- Not found --- #
+
+
+def test_get_bug_not_found(client):
+    fake_id = "00000000-0000-0000-0000-000000000000"
+    response = client.get(f"/api/bugs/{fake_id}")
+    assert response.status_code == 404
