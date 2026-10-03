@@ -169,3 +169,9 @@ def test_get_bug_not_found(client):
     fake_id = "00000000-0000-0000-0000-000000000000"
     response = client.get(f"/api/bugs/{fake_id}")
     assert response.status_code == 404
+
+
+def test_delete_bug_not_found(client, auth_headers):
+    fake_id = "00000000-0000-0000-0000-000000000000"
+    response = client.delete(f"/api/bugs/{fake_id}", headers=auth_headers)
+    assert response.status_code == 404
