@@ -1,5 +1,5 @@
 from app.models import PriorityEnum, StatusEnum
-from tests.conftest import make_project, make_token, make_user
+from tests.conftest import make_bug, make_project, make_token, make_user
 
 # --- Happy path --- #
 
@@ -175,3 +175,18 @@ def test_delete_bug_not_found(client, auth_headers):
     fake_id = "00000000-0000-0000-0000-000000000000"
     response = client.delete(f"/api/bugs/{fake_id}", headers=auth_headers)
     assert response.status_code == 404
+
+
+# --- Filtering ---
+
+
+def test_get_bugs_filter_by_status(client, db, test_user):
+    project = make_project(db, test_user)
+    make_bug(db, test_user, project, status=StatusEnum.open)
+    make_bug(db, test_user, project, status=StatusEnum.resolved)
+
+    response = client.get("/api/bugs/", params={"status": "resolved"})
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["status"] == "resolved"
