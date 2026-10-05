@@ -190,3 +190,15 @@ def test_get_bugs_filter_by_status(client, db, test_user):
     data = response.json()
     assert len(data) == 1
     assert data[0]["status"] == "resolved"
+
+
+def test_get_bugs_filter_by_priority(client, db, test_user):
+    project = make_project(db, test_user)
+    make_bug(db, test_user, project, priority=PriorityEnum.critical)
+    make_bug(db, test_user, project, priority=PriorityEnum.low)
+
+    response = client.get("/api/bugs/", params={"priority": "critical"})
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["priority"] == "critical"
