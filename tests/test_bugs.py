@@ -202,3 +202,16 @@ def test_get_bugs_filter_by_priority(client, db, test_user):
     data = response.json()
     assert len(data) == 1
     assert data[0]["priority"] == "critical"
+
+
+def test_get_bugs_filter_by_assignee(client, db, test_user):
+    project = make_project(db, test_user)
+    assignee = make_user(db, "assignee@example.com")
+    make_bug(db, test_user, project, assignee_id=assignee.id)
+    make_bug(db, test_user, project)
+
+    response = client.get("/api/bugs/", params={"assignee_id": str(assignee.id)})
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["assignee_id"] == str(assignee.id)
