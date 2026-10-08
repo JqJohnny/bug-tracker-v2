@@ -177,7 +177,7 @@ def test_delete_bug_not_found(client, auth_headers):
     assert response.status_code == 404
 
 
-# --- Filtering ---
+# --- Filtering --- #
 
 
 def test_get_bugs_filter_by_status(client, db, test_user):
