@@ -22,6 +22,16 @@ def test_get_projects(client, auth_headers, db, test_user):
     assert len(response.json()) >= 1
 
 
+def test_get_projects_excludes_unrelated(client, db, test_user):
+    other_user = make_user(db, "unrelated@example.com")
+    other_headers = make_token(other_user)
+    make_project(db, test_user)  # owned by test_user, not other_user
+
+    response = client.get("/api/projects/", headers=other_headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 0
+
+
 def test_get_project(client, test_user, db):
     project = make_project(db, test_user)
     response = client.get(f"/api/projects/{project.id}")
