@@ -32,6 +32,21 @@ def test_get_projects_excludes_unrelated(client, db, test_user):
     assert len(response.json()) == 0
 
 
+def test_get_projects_includes_contributor(client, db, test_user, auth_headers):
+    project = make_project(db, test_user)
+    contributor = make_user(db, "contributor@example.com")
+    contributor_headers = make_token(contributor)
+    client.post(
+        f"/api/projects/{project.id}/contributors/{contributor.id}",
+        headers=auth_headers,
+    )
+
+    response = client.get("/api/projects/", headers=contributor_headers)
+    assert response.status_code == 200
+    project_ids = [p["id"] for p in response.json()]
+    assert str(project.id) in project_ids
+
+
 def test_get_project(client, test_user, db):
     project = make_project(db, test_user)
     response = client.get(f"/api/projects/{project.id}")
