@@ -22,6 +22,12 @@ class StatusEnum(str, enum.Enum):
     resolved = "resolved"
 
 
+class TypeEnum(str, enum.Enum):
+    bug = "bug"
+    issue = "issue"
+    feature_request = "feature_request"
+
+
 project_contributors = Table(
     "projects_contributors",
     Base.metadata,
