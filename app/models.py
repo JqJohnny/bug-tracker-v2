@@ -21,6 +21,10 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
+def utcnow() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
 class PriorityEnum(str, enum.Enum):
     low = "low"
     medium = "medium"
@@ -57,6 +61,7 @@ project_contributors = Table(
         index=True,
     ),
 )
+
 
 class User(Base):
     __tablename__ = "users"
